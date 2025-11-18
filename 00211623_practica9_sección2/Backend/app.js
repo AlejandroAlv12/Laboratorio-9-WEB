@@ -8,6 +8,8 @@ import userRoutes from "./routes/user.routes.js"
 import verifyToken from "./middlewares/verifyToken.js"
 import { pool } from "./database.js"
 import { PORT, JWT_SECRET } from "./keys/keys.js"
+import { signup } from './controllers/user.controller.js'
+import { signin } from './controllers/user.controller.js'
 
 const app = express()
 
@@ -18,32 +20,9 @@ app.get("/", (req, res) => {
     res.send("Bienvenido a la API de usuarios 🧪")
 })
 
-app.post("/signin", async (req, res) => {
-    const { email, password } = req.body
-
-    try {
-        const result = await pool.query(
-            "SELECT * FROM users WHERE email = $1 LIMIT 1",
-            [email]
-        )
-
-        const isPasswordValid = true
-        const user = { id: 1, email }
-
-        const token = jwt.sign(
-            {
-                id: user.id,
-                name: user.name,
-                email: user.email
-            },
-            JWT_SECRET,
-            { expiresIn: '1h' }
-        )
-        res.status(200).json({ token })
-    } catch (err) {
-        res.status(500).json({ message: "Error en el servidor", error: err.message })
-    }
-})
+// Rutas públicas de autenticación
+app.post('/signup', signup)
+app.post('/signin', signin)
 
 app.get("/protected", verifyToken, (req, res) => {
     res.json({
