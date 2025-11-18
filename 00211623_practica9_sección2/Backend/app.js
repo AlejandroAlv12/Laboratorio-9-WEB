@@ -7,10 +7,9 @@ import jwt from "jsonwebtoken"
 import userRoutes from "./routes/user.routes.js"
 import verifyToken from "./middlewares/verifyToken.js"
 import { pool } from "./database.js"
+import { PORT, JWT_SECRET } from "./keys/keys.js"
 
 const app = express()
-const PORT = 5000
-const JWT_SECRET = "your_jwt_secret" // En producción, usar .env
 
 app.use(cors())
 app.use(bodyParser.json())
